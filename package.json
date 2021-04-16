@@ -44,6 +44,7 @@
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.6",
     "@types/react-transition-group": "^4.4.0",
+    "@types/three": "^0.127.1",
     "@types/uuid": "^8.3.0",
     "cross-env": "^7.0.2",
     "prettier": "^2.1.2",
