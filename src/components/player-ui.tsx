@@ -56,6 +56,7 @@ const useStyles = createUseThemedStyles((theme) => ({
 
 export const PlayerUi: FC = () => {
 	const classes = useStyles();
+
 	return (
 		<div className={classes.playerUi}>
 			<div className={classes.unitFrame}>

@@ -1,9 +1,10 @@
 import React, { FC } from 'react';
 import { GroupProps, MeshProps } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
-
-import { CharacterUi } from './character-ui';
 import { createUseStyles } from 'react-jss';
+
+import { CharacterUi } from '@/components/character-ui';
+import { useCustomContextBridge } from '@/hooks';
 
 const useStyles = createUseStyles({
 	fauxDropZone: {
@@ -18,23 +19,31 @@ const useStyles = createUseStyles({
 });
 
 const UiAnchor: FC<MeshProps> = ({ children, ...props }) => {
+	const CustomContextBridge = useCustomContextBridge();
+
 	return (
 		<mesh {...props}>
 			<boxGeometry attach="geometry" args={[0.5, 0.5, 0.5]} />
 			<meshStandardMaterial attach="material" transparent opacity={0} />
-			{children && <Html style={{ pointerEvents: 'none' }}>{children}</Html>}
+			{children && (
+				<Html style={{ pointerEvents: 'none' }}>
+					<CustomContextBridge>{children}</CustomContextBridge>
+				</Html>
+			)}
 		</mesh>
 	);
 };
 
 const CharacterModel: FC<MeshProps> = ({ children, ...props }) => {
+	const CustomContextBridge = useCustomContextBridge();
+
 	return (
 		<mesh {...props}>
 			<boxGeometry attach="geometry" args={[1, 1, 1]} />
 			<meshStandardMaterial attach="material" color="orange" />
 			{children && (
 				<Html distanceFactor={10} center>
-					{children}
+					<CustomContextBridge>{children}</CustomContextBridge>
 				</Html>
 			)}
 		</mesh>
