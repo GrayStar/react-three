@@ -10,10 +10,11 @@ const useStyles = createUseStyles({
 	fauxDropZone: {
 		width: 64,
 		height: 64,
-		opacity: 0.5,
-		backgroundColor: 'red',
+		opacity: 0,
+		borderRadius: 8,
+		backgroundColor: 'hotpink',
 		'&:hover': {
-			backgroundColor: 'blue',
+			opacity: 1,
 		},
 	},
 });
@@ -34,13 +35,17 @@ const UiAnchor: FC<MeshProps> = ({ children, ...props }) => {
 	);
 };
 
-const CharacterModel: FC<MeshProps> = ({ children, ...props }) => {
+interface CharacterModelProps extends MeshProps {
+	color?: string;
+}
+
+const CharacterModel: FC<CharacterModelProps> = ({ color, children, ...props }) => {
 	const CustomContextBridge = useCustomContextBridge();
 
 	return (
 		<mesh {...props}>
 			<boxGeometry attach="geometry" args={[1, 1, 1]} />
-			<meshStandardMaterial attach="material" color="orange" />
+			<meshStandardMaterial attach="material" color={color || 'orange'} />
 			{children && (
 				<Html distanceFactor={10} center>
 					<CustomContextBridge>{children}</CustomContextBridge>
@@ -50,15 +55,22 @@ const CharacterModel: FC<MeshProps> = ({ children, ...props }) => {
 	);
 };
 
-export function Character(props: GroupProps) {
+interface CharacterProps extends GroupProps {
+	color?: string;
+	showUnitFrame?: boolean;
+}
+
+export function Character({ color, showUnitFrame, ...props }: CharacterProps) {
 	const classes = useStyles();
 
 	return (
 		<group {...props}>
-			<UiAnchor position={[0, 0.75, 0]}>
-				<CharacterUi />
-			</UiAnchor>
-			<CharacterModel position={[0, 0, 0]} castShadow>
+			{showUnitFrame && (
+				<UiAnchor position={[0, 0.75, 0]}>
+					<CharacterUi />
+				</UiAnchor>
+			)}
+			<CharacterModel position={[0, 0, 0]} castShadow color={color}>
 				<div className={classes.fauxDropZone} />
 			</CharacterModel>
 		</group>
