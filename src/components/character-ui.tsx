@@ -1,31 +1,35 @@
 import React, { FC } from 'react';
-import { createUseStyles } from 'react-jss';
 
 import { ResourceBar, StatusEffect } from '@/components';
+import { createUseThemedStyles } from '@/theme';
 
-const useStyle = createUseStyles({
-	ui: {
-		width: 68,
-		padding: 8,
-		borderRadius: 8,
-		backgroundColor: 'white',
-		transform: 'translate(-50%, -100%)',
-	},
-	statusEffectsContainer: {
-		display: 'flex',
-		flexWrap: 'wrap',
-	},
-	icon: {
-		marginRight: 4,
-		marginBottom: 4,
-		'&:nth-child(even)': {
-			marginRight: 0,
+const useStyles = createUseThemedStyles((theme) => {
+	console.log(theme);
+
+	return {
+		ui: {
+			width: 68,
+			padding: 8,
+			borderRadius: 8,
+			transform: 'translate(-50%, -100%)',
+			backgroundColor: 'white',
 		},
-	},
+		statusEffectsContainer: {
+			display: 'flex',
+			flexWrap: 'wrap',
+		},
+		icon: {
+			marginRight: 4,
+			marginBottom: 4,
+			'&:nth-child(even)': {
+				marginRight: 0,
+			},
+		},
+	};
 });
 
 export const CharacterUi: FC = () => {
-	const classes = useStyle();
+	const classes = useStyles();
 
 	return (
 		<div className={classes.ui}>

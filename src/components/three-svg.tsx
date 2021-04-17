@@ -58,8 +58,6 @@ interface ThreeSvgProps {
 	position?: Vector3;
 }
 
-const Svg = (props: ThreeSvgProps) => (
+export const ThreeSvg = (props: ThreeSvgProps) => (
 	<Suspense fallback={<DefaultModel {...props} />} children={<SvgAsync {...props} />} />
 );
-
-export default Svg;

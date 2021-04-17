@@ -1,8 +1,9 @@
 import React, { FC } from 'react';
-import { createUseStyles } from 'react-jss';
-import { ResourceBar, StatusEffect } from '@/components';
 
-const useStyles = createUseStyles({
+import { ResourceBar, StatusEffect } from '@/components';
+import { createUseThemedStyles } from '@/theme';
+
+const useStyles = createUseThemedStyles((theme) => ({
 	playerUi: {
 		display: 'flex',
 		flexDirection: 'column',
@@ -13,7 +14,7 @@ const useStyles = createUseStyles({
 		borderRadius: 8,
 		alignSelf: 'center',
 		alignItems: 'center',
-		backgroundColor: 'white',
+		backgroundColor: theme.colors.white,
 	},
 	resourceBar: {
 		marginBottom: 4,
@@ -51,7 +52,7 @@ const useStyles = createUseStyles({
 			marginRight: 0,
 		},
 	},
-});
+}));
 
 export const PlayerUi: FC = () => {
 	const classes = useStyles();
