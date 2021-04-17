@@ -3,6 +3,8 @@ import { GroupProps, useFrame } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 import { createUseStyles } from 'react-jss';
 
+import { ResourceBar } from '@/components/resource-bar';
+
 const useStyle = createUseStyles({
 	tooltip: {
 		width: 68,
@@ -34,7 +36,7 @@ const useStyle = createUseStyles({
 	},
 });
 
-export function Box({ ...props }: GroupProps) {
+export function Box(props: GroupProps) {
 	const classes = useStyle();
 
 	const group = useRef<THREE.Mesh>();
@@ -51,7 +53,7 @@ export function Box({ ...props }: GroupProps) {
 			<mesh position={[0, 0.75, 0]}>
 				<boxGeometry args={[0.5, 0.5, 0.5]} />
 				<meshStandardMaterial transparent opacity={0} />
-				<Html style={{ pointerEvents: 'none' }}>
+				<Html style={{ pointerEvents: 'none' }} distanceFactor={10}>
 					<div className={classes.tooltip}>
 						<div className={classes.statusEffectsContainer}>
 							<div className={classes.icon} />
@@ -61,12 +63,12 @@ export function Box({ ...props }: GroupProps) {
 							<div className={classes.icon} />
 							<div className={classes.icon} />
 						</div>
-						<div className={classes.bar} />
-						<div className={classes.bar} />
+						<ResourceBar value={60} max={100} color="#F47991" className="mb-1" />
+						<ResourceBar value={40} max={100} color="#4DA5D8" />
 					</div>
 				</Html>
 			</mesh>
-			<mesh position={[0, 0, 0]}>
+			<mesh position={[0, 0, 0]} castShadow>
 				<boxGeometry args={[1, 1, 1]} />
 				<meshStandardMaterial color="orange" />
 			</mesh>
