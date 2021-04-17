@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Canvas, MeshProps } from '@react-three/fiber';
-import { Box, DirectionalLight } from '@/components';
-import { OrbitControls } from '@react-three/drei';
+import { Character, DirectionalLight, PlayerUi } from '@/components';
+import { OrbitControls, PerspectiveCamera, Stats } from '@react-three/drei';
+import Svg from './components/three-svg';
+import { useGlobalStyles } from './jss/hooks/use-global-styles';
 
 function GroundPlane(props: MeshProps) {
 	return (
@@ -13,29 +15,42 @@ function GroundPlane(props: MeshProps) {
 }
 
 function App() {
+	useGlobalStyles();
+	const camera = useRef();
+
 	return (
-		<Canvas
-			dpr={window.devicePixelRatio}
-			style={{ width: '100%', height: 800, backgroundColor: '#D4EFFF' }}
-			shadows
-		>
-			<fog attach="fog" args={['#D4EFFF', 0, 64]} />
+		<>
+			<Canvas
+				dpr={window.devicePixelRatio}
+				style={{ width: 375, height: 500, backgroundColor: '#D4EFFF' }}
+				shadows
+			>
+				{/* <fog attach="fog" args={['#D4EFFF', 0, 64]} /> */}
 
-			<hemisphereLight args={['#FFEEB1', '#080820', 1]} />
-			<DirectionalLight color="#FFE9D5" position={[-24, 56, -24]} castShadow intensity={0.6} />
+				<hemisphereLight args={['#FFEEB1', '#080820', 1]} />
+				<DirectionalLight color="#FFE9D5" position={[-56, 56, -56]} castShadow intensity={0.6} />
 
-			<Box position={[-1.5, 0.5, 0]} />
-			<Box position={[0, 0.5, -1]} />
-			<Box position={[1.5, 0.5, 0]} />
+				<Character position={[-2, 0.5, 0]} />
+				<Character position={[0, 0.5, -1]} />
+				<Character position={[2, 0.5, 0]} />
 
-			<GroundPlane receiveShadow />
+				<GroundPlane receiveShadow />
 
-			{/* @ts-ignore */}
-			<OrbitControls />
+				<PerspectiveCamera makeDefault ref={camera} position={[0, 6, 10]} />
+				<OrbitControls camera={camera.current} />
 
-			{/* <axesHelper args={[8]} /> */}
-			{/* <gridHelper args={[16, 16, 16]} /> */}
-		</Canvas>
+				<Svg url="/static/yellow-tree.svg" position={[-4, 2.7, 3.7]} />
+				<Svg url="/static/yellow-tree.svg" position={[2, 2.7, 4]} />
+				<Svg url="/static/yellow-tree.svg" position={[-4, 2.7, -3.7]} />
+				<Svg url="/static/yellow-tree.svg" position={[2, 2.7, -4]} />
+
+				{/* <axesHelper args={[8]} /> */}
+				{/* <gridHelper args={[16, 16, 16]} /> */}
+
+				<Stats />
+			</Canvas>
+			<PlayerUi />
+		</>
 	);
 }
 
