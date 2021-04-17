@@ -11,5 +11,6 @@ export const colors = {
 	gray900: '#212529',
 	black: '#000000',
 
-	brandPrimary: '#295685',
+	health: '#F47991',
+	mana: '#4DA5D8',
 };

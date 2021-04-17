@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 
 import { ResourceBar, StatusEffect } from '@/components';
-import { createUseThemedStyles } from '@/theme';
+import { createUseThemedStyles, useTheme } from '@/theme';
 
 const useStyles = createUseThemedStyles((theme) => ({
 	playerUi: {
@@ -55,14 +55,27 @@ const useStyles = createUseThemedStyles((theme) => ({
 }));
 
 export const PlayerUi: FC = () => {
+	const { theme } = useTheme();
 	const classes = useStyles();
 
 	return (
 		<div className={classes.playerUi}>
 			<div className={classes.unitFrame}>
 				<div>
-					<ResourceBar value={90} max={100} color="#F47991" width={56} className={classes.resourceBar} />
-					<ResourceBar value={30} max={100} color="#4DA5D8" width={56} className={classes.resourceBar} />
+					<ResourceBar
+						value={90}
+						max={100}
+						color={theme.colors.health}
+						width={56}
+						className={classes.resourceBar}
+					/>
+					<ResourceBar
+						value={30}
+						max={100}
+						color={theme.colors.mana}
+						width={56}
+						className={classes.resourceBar}
+					/>
 				</div>
 				<div className={classes.statusEffects}>
 					<StatusEffect className={classes.statusEffect} />

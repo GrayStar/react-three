@@ -39,8 +39,8 @@ export const CharacterUi: FC = () => {
 				<StatusEffect className={classes.icon} />
 				<StatusEffect className={classes.icon} />
 			</div>
-			<ResourceBar value={60} max={100} color="#F47991" className="mb-1" />
-			<ResourceBar value={40} max={100} color="#4DA5D8" />
+			<ResourceBar value={60} max={100} color={theme.colors.health} className="mb-1" />
+			<ResourceBar value={40} max={100} color={theme.colors.mana} />
 		</div>
 	);
 };
