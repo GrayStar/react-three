@@ -25,11 +25,11 @@ export const Battle: FC = () => {
 				<Col>
 					<Canvas
 						dpr={window.devicePixelRatio}
-						style={{ width: 375, height: 500, backgroundColor: '#D4EFFF' }}
+						style={{ width: 375, height: 500, backgroundColor: '#D4EFFF', margin: '0 auto' }}
 						shadows
 					>
 						<CustomContextBridge>
-							{/* <fog attach="fog" args={['#D4EFFF', 0, 64]} /> */}
+							<fog attach="fog" args={['#D4EFFF', 0, 64]} />
 
 							<hemisphereLight args={['#FFEEB1', '#080820', 1]} />
 							<DirectionalLight color="#FFE9D5" position={[-56, 56, -56]} castShadow intensity={0.6} />
