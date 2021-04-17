@@ -7,8 +7,6 @@ export const useGlobalStyles = createUseStyles({
 			height: '100%',
 		},
 		body: {
-			width: '100%',
-			display: 'flex',
 			minHeight: '100%',
 			position: 'relative',
 			backgroundColor: '#A6B8CA',

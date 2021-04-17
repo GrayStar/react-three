@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { createUseStyles } from 'react-jss';
-import { ResourceBar } from './resource-bar';
+import { ResourceBar, StatusEffect } from '@/components';
 
 const useStyles = createUseStyles({
 	playerUi: {
@@ -16,7 +16,6 @@ const useStyles = createUseStyles({
 		backgroundColor: 'white',
 	},
 	resourceBar: {
-		width: 56,
 		marginBottom: 4,
 		'&:last-child': {
 			marginBottom: 0,
@@ -27,11 +26,7 @@ const useStyles = createUseStyles({
 		display: 'flex',
 	},
 	statusEffect: {
-		width: 24,
-		height: 24,
 		marginRight: 4,
-		borderRadius: 4,
-		backgroundColor: '#2D373E',
 		'&:last-child': {
 			marginRight: 0,
 		},
@@ -64,13 +59,13 @@ export const PlayerUi: FC = () => {
 		<div className={classes.playerUi}>
 			<div className={classes.unitFrame}>
 				<div>
-					<ResourceBar value={90} max={100} color="#F47991" className={classes.resourceBar} />
-					<ResourceBar value={30} max={100} color="#4DA5D8" className={classes.resourceBar} />
+					<ResourceBar value={90} max={100} color="#F47991" width={56} className={classes.resourceBar} />
+					<ResourceBar value={30} max={100} color="#4DA5D8" width={56} className={classes.resourceBar} />
 				</div>
 				<div className={classes.statusEffects}>
-					<div className={classes.statusEffect} />
-					<div className={classes.statusEffect} />
-					<div className={classes.statusEffect} />
+					<StatusEffect className={classes.statusEffect} />
+					<StatusEffect className={classes.statusEffect} />
+					<StatusEffect className={classes.statusEffect} />
 				</div>
 			</div>
 			<div className={classes.actionBar}>
