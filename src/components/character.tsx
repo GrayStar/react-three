@@ -1,14 +1,15 @@
 import React, { FC, useRef } from 'react';
-import { MeshProps } from '@react-three/fiber';
+import { MeshProps, useFrame } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 import { createUseStyles } from 'react-jss';
-import * as easings from 'd3-ease';
 
 import { CharacterUi } from '@/components/character-ui';
 import { useCustomContextBridge } from '@/hooks';
-import { Object3D } from 'three';
-import { animated, useSpring } from '@react-spring/three';
+import { Object3D, Vector3 } from 'three';
 import { PositionArray } from '@/core/models';
+
+import * as TWEEN from '@tweenjs/tween.js';
+import { animateVector3 } from '@/core/utils';
 
 const useStyles = createUseStyles({
 	fauxDropZone: {
@@ -64,24 +65,20 @@ interface CharacterProps {
 	showUnitFrame?: boolean;
 	onClick?(node: Object3D): void;
 	startingPosition: PositionArray;
-	target?: PositionArray;
 }
 
-export function Character({ color, showUnitFrame, onClick, startingPosition, target }: CharacterProps) {
-	const groupRef = useRef<Object3D>();
+export function Character({ color, showUnitFrame, onClick, startingPosition }: CharacterProps) {
 	const classes = useStyles();
+	const groupRef = useRef<Object3D>();
 
-	const { pos } = useSpring({
-		to: [{ pos: target }, { pos: startingPosition }],
-		from: { pos: startingPosition },
-		config: {
-			easing: easings.easeCubic,
-			duration: 200,
-		},
+	const startingVector = new Vector3(startingPosition[0], startingPosition[1], startingPosition[2]);
+
+	useFrame(() => {
+		TWEEN.update();
 	});
 
 	return (
-		<animated.group ref={groupRef} position={(pos as unknown) as PositionArray}>
+		<group ref={groupRef} position={startingPosition}>
 			{showUnitFrame && (
 				<UiAnchor position={[0, 0.75, 0]}>
 					<CharacterUi />
@@ -95,10 +92,22 @@ export function Character({ color, showUnitFrame, onClick, startingPosition, tar
 							return;
 						}
 
-						onClick(groupRef.current);
+						animateVector3(startingVector, new Vector3(0, 0.5, 0), {
+							duration: 500,
+							easing: TWEEN.Easing.Quadratic.InOut,
+							update: (d) => {
+								if (!groupRef.current) {
+									return;
+								}
+
+								groupRef.current.position.x = d.x;
+								groupRef.current.position.y = d.y;
+								groupRef.current.position.z = d.z;
+							},
+						});
 					}}
 				/>
 			</CharacterModel>
-		</animated.group>
+		</group>
 	);
 }

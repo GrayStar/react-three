@@ -1,11 +1,10 @@
-import React, { FC, useRef, useState } from 'react';
+import React, { FC, useRef } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import { Canvas, MeshProps } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera, Stats } from '@react-three/drei';
 
 import { Character, DirectionalLight, PlayerUi, ThreeSvg } from '@/components';
 import { useCustomContextBridge } from '@/hooks';
-import { PositionArray } from '@/core/models';
 
 function GroundPlane(props: MeshProps) {
 	return (
@@ -18,7 +17,6 @@ function GroundPlane(props: MeshProps) {
 
 export const Battle: FC = () => {
 	const camera = useRef();
-	const [target, setTarget] = useState<PositionArray>();
 	const CustomContextBridge = useCustomContextBridge();
 
 	return (
@@ -41,7 +39,7 @@ export const Battle: FC = () => {
 								showUnitFrame
 								color={'red'}
 								onClick={(node) => {
-									setTarget([node.position.x, node.position.y, node.position.z]);
+									return;
 								}}
 							/>
 							<Character
@@ -49,8 +47,7 @@ export const Battle: FC = () => {
 								showUnitFrame
 								color={'red'}
 								onClick={(node) => {
-									console.log(node);
-									setTarget([node.position.x, node.position.y, node.position.z]);
+									return;
 								}}
 							/>
 							<Character
@@ -58,11 +55,17 @@ export const Battle: FC = () => {
 								showUnitFrame
 								color={'red'}
 								onClick={(node) => {
-									setTarget([node.position.x, node.position.y, node.position.z]);
+									return;
 								}}
 							/>
 
-							<Character startingPosition={[0, 0.5, 3]} color={'blue'} target={target} />
+							<Character
+								startingPosition={[0, 0.5, 3]}
+								color={'blue'}
+								onClick={(node) => {
+									return;
+								}}
+							/>
 
 							<GroundPlane receiveShadow />
 
