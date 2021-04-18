@@ -5,6 +5,7 @@ import { createUseStyles } from 'react-jss';
 
 import { CharacterUi } from '@/components/character-ui';
 import { useCustomContextBridge } from '@/hooks';
+import { Object3D } from 'three';
 
 const useStyles = createUseStyles({
 	fauxDropZone: {
@@ -60,19 +61,21 @@ interface CharacterProps extends GroupProps {
 	showUnitFrame?: boolean;
 }
 
-export function Character({ color, showUnitFrame, ...props }: CharacterProps) {
-	const classes = useStyles();
+export const Character = React.forwardRef<Object3D | undefined, CharacterProps>(
+	({ color, showUnitFrame, ...props }, ref) => {
+		const classes = useStyles();
 
-	return (
-		<group {...props}>
-			{showUnitFrame && (
-				<UiAnchor position={[0, 0.75, 0]}>
-					<CharacterUi />
-				</UiAnchor>
-			)}
-			<CharacterModel position={[0, 0, 0]} castShadow color={color}>
-				<div className={classes.fauxDropZone} />
-			</CharacterModel>
-		</group>
-	);
-}
+		return (
+			<group ref={ref} {...props}>
+				{showUnitFrame && (
+					<UiAnchor position={[0, 0.75, 0]}>
+						<CharacterUi />
+					</UiAnchor>
+				)}
+				<CharacterModel position={[0, 0, 0]} castShadow color={color}>
+					<div className={classes.fauxDropZone} />
+				</CharacterModel>
+			</group>
+		);
+	}
+);

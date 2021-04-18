@@ -5,6 +5,7 @@ import { OrbitControls, PerspectiveCamera, Stats } from '@react-three/drei';
 
 import { Character, DirectionalLight, PlayerUi, ThreeSvg } from '@/components';
 import { useCustomContextBridge } from '@/hooks';
+import { Object3D } from 'three';
 
 function GroundPlane(props: MeshProps) {
 	return (
@@ -16,7 +17,9 @@ function GroundPlane(props: MeshProps) {
 }
 
 export const Battle: FC = () => {
+	const enemy = useRef<Object3D>();
 	const camera = useRef();
+
 	const CustomContextBridge = useCustomContextBridge();
 
 	return (
@@ -34,13 +37,8 @@ export const Battle: FC = () => {
 							<hemisphereLight args={['#FFEEB1', '#080820', 1]} />
 							<DirectionalLight color="#FFE9D5" position={[-56, 56, -56]} castShadow intensity={0.6} />
 
-							<Character position={[-2, 0.5, -2]} showUnitFrame color={'red'} />
-							<Character position={[0, 0.5, -3]} showUnitFrame color={'red'} />
-							<Character position={[2, 0.5, -2]} showUnitFrame color={'red'} />
-
-							<Character position={[-2, 0.5, 2]} color={'blue'} />
+							<Character ref={enemy} position={[0, 0.5, -3]} showUnitFrame color={'red'} />
 							<Character position={[0, 0.5, 3]} color={'blue'} />
-							<Character position={[2, 0.5, 2]} color={'blue'} />
 
 							<GroundPlane receiveShadow />
 
