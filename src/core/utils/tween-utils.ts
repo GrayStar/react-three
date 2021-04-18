@@ -1,16 +1,36 @@
-import { Vector3 } from 'three';
 import * as TWEEN from '@tweenjs/tween.js';
 
 interface AnimateVector3Options {
 	duration?: number;
 	easing?(amount: number): number;
-	update?(d: Vector3): void;
-	callback?(d: Vector3): void;
+	update?(d: animateConfig): void;
+	callback?(d: animateConfig): void;
 }
 
-export function animateVector3(start: Vector3, target: Vector3, options?: AnimateVector3Options) {
-	const tweenVector3 = new TWEEN.Tween(start)
-		.to({ x: target.x, y: target.y, z: target.z }, options?.duration || 2000)
+const defaultDuration = 2000;
+
+type animateConfig = {
+	posX?: number;
+	posY?: number;
+	posZ?: number;
+	scaleX?: number;
+	scaleY?: number;
+	scaleZ?: number;
+};
+
+export function animateObject3D(current: animateConfig, to: animateConfig, options?: AnimateVector3Options) {
+	const tween = new TWEEN.Tween(current)
+		.to(
+			{
+				posX: to.posX,
+				posY: to.posY,
+				posZ: to.posZ,
+				scaleX: to.scaleX,
+				scaleY: to.scaleY,
+				scaleZ: to.scaleZ,
+			},
+			options?.duration || defaultDuration
+		)
 		.easing(options?.easing || TWEEN.Easing.Quadratic.In)
 		.onUpdate((d) => {
 			if (options?.update) {
@@ -23,7 +43,7 @@ export function animateVector3(start: Vector3, target: Vector3, options?: Animat
 			}
 		});
 
-	tweenVector3.start();
+	tween.start();
 
-	return tweenVector3;
+	return tween;
 }

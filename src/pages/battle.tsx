@@ -5,6 +5,9 @@ import { OrbitControls, PerspectiveCamera, Stats } from '@react-three/drei';
 
 import { Character, DirectionalLight, PlayerUi, ThreeSvg } from '@/components';
 import { useCustomContextBridge } from '@/hooks';
+import { Object3D } from 'three';
+import { animateObject3D } from '@/core/utils';
+import { enemies } from '@/__mock__';
 
 function GroundPlane(props: MeshProps) {
 	return (
@@ -18,6 +21,49 @@ function GroundPlane(props: MeshProps) {
 export const Battle: FC = () => {
 	const camera = useRef();
 	const CustomContextBridge = useCustomContextBridge();
+
+	const playerRef = useRef<Object3D>();
+	const enemyRefsById = useRef<Record<string, React.RefObject<Object3D | undefined>>>({});
+
+	function handleEnemyClicked(enemyId: string) {
+		const enemyRef = enemyRefsById.current[enemyId];
+		if (!enemyRef.current || !playerRef.current) {
+			return;
+		}
+
+		playerRef.current.lookAt(enemyRef.current.position);
+
+		animateObject3D(
+			{
+				posX: playerRef.current.position.x,
+				posY: playerRef.current.position.y,
+				posZ: playerRef.current.position.z,
+			},
+			{
+				posX: enemyRef.current.position.x,
+				posY: enemyRef.current.position.y,
+				posZ: enemyRef.current.position.z,
+			},
+			{
+				duration: 300,
+				update: (d) => {
+					if (!playerRef.current) {
+						return;
+					}
+
+					if (d.posX) {
+						playerRef.current.position.x = d.posX;
+					}
+					if (d.posY) {
+						playerRef.current.position.y = d.posY;
+					}
+					if (d.posZ) {
+						playerRef.current.position.z = d.posZ;
+					}
+				},
+			}
+		);
+	}
 
 	return (
 		<Container fluid>
@@ -34,35 +80,29 @@ export const Battle: FC = () => {
 							<hemisphereLight args={['#FFEEB1', '#080820', 1]} />
 							<DirectionalLight color="#FFE9D5" position={[-56, 56, -56]} castShadow intensity={0.6} />
 
-							<Character
-								startingPosition={[-2, 0.5, -2]}
-								showUnitFrame
-								color={'red'}
-								onClick={(node) => {
-									return;
-								}}
-							/>
-							<Character
-								startingPosition={[0, 0.5, -3]}
-								showUnitFrame
-								color={'red'}
-								onClick={(node) => {
-									return;
-								}}
-							/>
-							<Character
-								startingPosition={[2, 0.5, -2]}
-								showUnitFrame
-								color={'red'}
-								onClick={(node) => {
-									return;
-								}}
-							/>
+							{Object.values(enemies).map((enemy) => {
+								const tempRef = React.createRef<Object3D | undefined>();
+								enemyRefsById.current[enemy.id] = tempRef;
+
+								return (
+									<Character
+										key={enemy.id}
+										ref={tempRef}
+										startingPosition={enemy.position}
+										showUnitFrame
+										color={'red'}
+										onClick={() => {
+											handleEnemyClicked(enemy.id);
+										}}
+									/>
+								);
+							})}
 
 							<Character
+								ref={playerRef}
 								startingPosition={[0, 0.5, 3]}
 								color={'blue'}
-								onClick={(node) => {
+								onClick={() => {
 									return;
 								}}
 							/>
