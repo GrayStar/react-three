@@ -1,4 +1,4 @@
-import React, { FC, useRef } from 'react';
+import React, { FC, useCallback, useRef } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import { Canvas, MeshProps } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera, Stats } from '@react-three/drei';
@@ -25,11 +25,53 @@ export const Battle: FC = () => {
 	const playerRef = useRef<Object3D>();
 	const enemyRefsById = useRef<Record<string, React.RefObject<Object3D | undefined>>>({});
 
+	const returnObject3DToStartingPosition = useCallback((object3D: Object3D) => {
+		animateObject3D(
+			{
+				posX: object3D.position.x,
+				posY: object3D.position.y,
+				posZ: object3D.position.z,
+			},
+			{
+				posX: 0,
+				posY: 0.5,
+				posZ: 3,
+			},
+			{
+				duration: 300,
+				update: (d) => {
+					if (!object3D) {
+						return;
+					}
+
+					if (d.posX) {
+						object3D.position.x = d.posX;
+					}
+					if (d.posY) {
+						object3D.position.y = d.posY;
+					}
+					if (d.posZ) {
+						object3D.position.z = d.posZ;
+					}
+				},
+				callback: () => {
+					object3D.rotation.x = 0;
+					object3D.rotation.y = 0;
+					object3D.rotation.z = 0;
+				},
+			}
+		);
+	}, []);
+
 	function handleEnemyClicked(enemyId: string) {
 		const enemyRef = enemyRefsById.current[enemyId];
 		if (!enemyRef.current || !playerRef.current) {
 			return;
 		}
+
+		const playerStartingPosition = playerRef.current.position;
+
+		console.log(playerStartingPosition);
 
 		playerRef.current.lookAt(enemyRef.current.position);
 
@@ -60,6 +102,13 @@ export const Battle: FC = () => {
 					if (d.posZ) {
 						playerRef.current.position.z = d.posZ;
 					}
+				},
+				callback: () => {
+					if (!playerRef.current) {
+						return;
+					}
+
+					returnObject3DToStartingPosition(playerRef.current);
 				},
 			}
 		);
