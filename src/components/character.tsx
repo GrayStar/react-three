@@ -18,7 +18,7 @@ const useStyles = createUseStyles({
 		borderRadius: 8,
 		backgroundColor: 'hotpink',
 		'&:hover': {
-			opacity: 1,
+			opacity: 0.5,
 		},
 	},
 });
@@ -87,7 +87,7 @@ export function Character({ color, showUnitFrame, onClick, startingPosition, tar
 					<CharacterUi />
 				</UiAnchor>
 			)}
-			<CharacterModel position={[0, 0, 0]} castShadow color={color}>
+			<CharacterModel position={[0, 0, 0]} castShadow receiveShadow color={color}>
 				<div
 					className={classes.fauxDropZone}
 					onClick={() => {

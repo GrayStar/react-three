@@ -16,7 +16,7 @@ const DefaultModel = (props: ThreeSvgProps) => (
 );
 
 const SvgShape = ({ shape, color, index }: any) => (
-	<mesh castShadow>
+	<mesh castShadow receiveShadow>
 		<meshStandardMaterial
 			attach="material"
 			color={color}
