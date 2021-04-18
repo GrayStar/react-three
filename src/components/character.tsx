@@ -1,11 +1,14 @@
-import React, { FC } from 'react';
-import { GroupProps, MeshProps } from '@react-three/fiber';
+import React, { FC, useRef } from 'react';
+import { MeshProps } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 import { createUseStyles } from 'react-jss';
+import * as easings from 'd3-ease';
 
 import { CharacterUi } from '@/components/character-ui';
 import { useCustomContextBridge } from '@/hooks';
 import { Object3D } from 'three';
+import { animated, useSpring } from '@react-spring/three';
+import { PositionArray } from '@/core/models';
 
 const useStyles = createUseStyles({
 	fauxDropZone: {
@@ -56,26 +59,46 @@ const CharacterModel: FC<CharacterModelProps> = ({ color, children, ...props }) 
 	);
 };
 
-interface CharacterProps extends GroupProps {
+interface CharacterProps {
 	color?: string;
 	showUnitFrame?: boolean;
+	onClick?(node: Object3D): void;
+	startingPosition: PositionArray;
+	target?: PositionArray;
 }
 
-export const Character = React.forwardRef<Object3D | undefined, CharacterProps>(
-	({ color, showUnitFrame, ...props }, ref) => {
-		const classes = useStyles();
+export function Character({ color, showUnitFrame, onClick, startingPosition, target }: CharacterProps) {
+	const groupRef = useRef<Object3D>();
+	const classes = useStyles();
 
-		return (
-			<group ref={ref} {...props}>
-				{showUnitFrame && (
-					<UiAnchor position={[0, 0.75, 0]}>
-						<CharacterUi />
-					</UiAnchor>
-				)}
-				<CharacterModel position={[0, 0, 0]} castShadow color={color}>
-					<div className={classes.fauxDropZone} />
-				</CharacterModel>
-			</group>
-		);
-	}
-);
+	const { pos } = useSpring({
+		to: [{ pos: target }, { pos: startingPosition }],
+		from: { pos: startingPosition },
+		config: {
+			easing: easings.easeCubic,
+			duration: 200,
+		},
+	});
+
+	return (
+		<animated.group ref={groupRef} position={(pos as unknown) as PositionArray}>
+			{showUnitFrame && (
+				<UiAnchor position={[0, 0.75, 0]}>
+					<CharacterUi />
+				</UiAnchor>
+			)}
+			<CharacterModel position={[0, 0, 0]} castShadow color={color}>
+				<div
+					className={classes.fauxDropZone}
+					onClick={() => {
+						if (!onClick || !groupRef.current) {
+							return;
+						}
+
+						onClick(groupRef.current);
+					}}
+				/>
+			</CharacterModel>
+		</animated.group>
+	);
+}

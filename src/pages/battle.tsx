@@ -1,11 +1,11 @@
-import React, { FC, useRef } from 'react';
+import React, { FC, useRef, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import { Canvas, MeshProps } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera, Stats } from '@react-three/drei';
 
 import { Character, DirectionalLight, PlayerUi, ThreeSvg } from '@/components';
 import { useCustomContextBridge } from '@/hooks';
-import { Object3D } from 'three';
+import { PositionArray } from '@/core/models';
 
 function GroundPlane(props: MeshProps) {
 	return (
@@ -17,9 +17,8 @@ function GroundPlane(props: MeshProps) {
 }
 
 export const Battle: FC = () => {
-	const enemy = useRef<Object3D>();
 	const camera = useRef();
-
+	const [target, setTarget] = useState<PositionArray>();
 	const CustomContextBridge = useCustomContextBridge();
 
 	return (
@@ -37,8 +36,33 @@ export const Battle: FC = () => {
 							<hemisphereLight args={['#FFEEB1', '#080820', 1]} />
 							<DirectionalLight color="#FFE9D5" position={[-56, 56, -56]} castShadow intensity={0.6} />
 
-							<Character ref={enemy} position={[0, 0.5, -3]} showUnitFrame color={'red'} />
-							<Character position={[0, 0.5, 3]} color={'blue'} />
+							<Character
+								startingPosition={[-2, 0.5, -2]}
+								showUnitFrame
+								color={'red'}
+								onClick={(node) => {
+									setTarget([node.position.x, node.position.y, node.position.z]);
+								}}
+							/>
+							<Character
+								startingPosition={[0, 0.5, -3]}
+								showUnitFrame
+								color={'red'}
+								onClick={(node) => {
+									console.log(node);
+									setTarget([node.position.x, node.position.y, node.position.z]);
+								}}
+							/>
+							<Character
+								startingPosition={[2, 0.5, -2]}
+								showUnitFrame
+								color={'red'}
+								onClick={(node) => {
+									setTarget([node.position.x, node.position.y, node.position.z]);
+								}}
+							/>
+
+							<Character startingPosition={[0, 0.5, 3]} color={'blue'} target={target} />
 
 							<GroundPlane receiveShadow />
 
